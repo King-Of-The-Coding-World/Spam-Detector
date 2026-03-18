@@ -69,7 +69,7 @@ python main.py
 
 ## 📸 Screenshots
 
-![Blank Page UI](screenshots/blank page.png)
+![Blank Page UI](screenshots/blank%20page.png)
 ![Spam Result](screenshots/spam.png)
 ![Not Spam Result](screenshots/not%20spam.png)
 
