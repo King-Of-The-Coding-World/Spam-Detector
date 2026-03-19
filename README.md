@@ -69,7 +69,7 @@ python main.py
 
 ## 📽️ Demo Video
 
-[Video Link]
+[Video Link](https://drive.google.com/file/d/1Rjf2GWmVyJ9PQNr9BpQkHg1WeeefEt56/view?usp=sharing)
 
 ---
 
