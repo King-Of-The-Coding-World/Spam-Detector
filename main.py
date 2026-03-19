@@ -16,6 +16,7 @@ from PySide6.QtGui import (
 from PySide6.QtMultimedia import (QMediaPlayer, QSoundEffect, QAudioOutput)
 
 
+# ------------ Title Bar (The Printer Body) ------------
 class titleBar(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -36,7 +37,7 @@ class titleBar(QLabel):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-    # Creating Printer Body
+        # Creating Printer Body
         printerPen = QPen()
         printerPen.setColor(QColor("#98A6A4"))
         printerPen.setWidth(3)
@@ -93,7 +94,7 @@ class titleBar(QLabel):
         path.closeSubpath()
         painter.drawPath(path)
 
-    # Drawing the underShape
+        # Drawing the underShape
         painter.setBrush("#A8DCEB")
         underShape = QPainterPath()
         underShape.moveTo(0, h-r)
@@ -121,19 +122,19 @@ class titleBar(QLabel):
 
         painter.drawPath(underShapeBig)
 
-    # Drawing the steel plate on the printer
+        # Drawing the steel plate on the printer
         painter.setBrush("#E5F5FA")
         painter.setPen("#95BCCB")
         painter.drawRoundedRect(20, 35, 220, 70, 10, 10)
 
-    # Writing 'Spam Detector'
+        # Writing 'Spam Detector'
         painter.setPen("#95BCCB")
         painter.setFont(self.beautifulES)
 
         painter.drawText(30, 60, "Spam")
         painter.drawText(80, 90, "Detector")
 
-    # Drawing Stars
+        # Drawing Stars
         painter.setPen("#E5F5FA")
         painter.setBrush("#95BCCB")
 
@@ -175,7 +176,7 @@ class titleBar(QLabel):
         placeStars(QPointF(150, 116), 70, [8, 9, 10, 9, 8], 0, 10)
         placeStars(QPointF(150, 116), 70, [8, 9, 10, 9, 8], 36, 10)
 
-    # Drawing the bottom-left and top-right fillers of steel plate
+        # Drawing the bottom-left and top-right fillers of steel plate
         fillerBrush = QBrush("#95BCCB")
         fillerBrush.setStyle(Qt.BrushStyle.Dense4Pattern)
 
@@ -202,13 +203,13 @@ class titleBar(QLabel):
         painter.drawPath(TfillerPath)
         painter.drawPath(BfillerPath)
 
-    # Drawing the Paper's input slot
+        # Drawing the Paper's input slot
         painter.setBrush("#FFFFFF")
         painter.setPen(QPen(QColor("#95BCCB"), 5))
 
         painter.drawRoundedRect(20, 15, 220, 10, 5, 5)
 
-    # Drawing the Paper's output slot
+        # Drawing the Paper's output slot
         painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush("#E7E4E4")
 
@@ -224,6 +225,7 @@ class titleBar(QLabel):
             self.window().move(ev.globalPosition().toPoint() - self.oldPos)
 
 
+# ------------ The Endless Paper Sheet in the input slot of printer ------------
 class Paper(QLabel):
 
     # Creating Signals. We always create them outside to avoid making raw signal objects.
@@ -238,7 +240,7 @@ class Paper(QLabel):
 
         self.paperMargin = 10  # Ends of line will be this much far from left and right curve
 
-        # to get the x coord of curves at a particular y of line
+        # to get the x coord of curves at a particular y of moving lines
         self.xofLeft = lambda y: 10 - math.sqrt(100 - (y*y/100))  # for left
         self.xofRight = lambda y: 10 + math.sqrt(100 - (y*y/100))  # for right
 
@@ -253,7 +255,7 @@ class Paper(QLabel):
         self.xAnim.setLoopCount(2)
         self.xAnim.finished.connect(self.enableButtonSignal.emit)
 
-    # Property
+    # Property used to control y coords the lines
     def getOffSet(self):
         return self._offset
 
@@ -263,7 +265,7 @@ class Paper(QLabel):
 
     offset = Property(float, getOffSet, setOffSet)
 
-    # trigger function and sending disable signal
+    # trigger function and sending disable signal to check button
     def comeOut(self):
         self.disableButtonSignal.emit()
         self.xAnim.start()
@@ -307,6 +309,7 @@ class Paper(QLabel):
         painter.restore()
 
 
+# ------------ Our Check Button ------------
 class checkBtn(QPushButton):
     def __init__(self, btnText, parent=None):
         super().__init__(parent)
@@ -316,6 +319,7 @@ class checkBtn(QPushButton):
     def setBtnText(self, value):
         self.btnText = value
 
+    # Function which push and pull the button
     def setIn(self, value: bool):
         self.showUnderShape = value
         if not self.showUnderShape:
@@ -324,6 +328,7 @@ class checkBtn(QPushButton):
             self.move(self.x(), self.y() - 10)
         self.update()
 
+    # The PaintEvent
     def paintEvent(self, e):
         painter = QPainter(self)
         pen = QPen("#FFA673")
@@ -371,7 +376,6 @@ class checkBtn(QPushButton):
         painter.drawPath(framePath)
 
         # Drawing the Text
-        # Our font to write 'Spam Detector'
         self.fontID1 = QFontDatabase.addApplicationFont(
             "./assets/fonts/Cinzel-Bold.otf")
         self.Cinzel = QFont(
@@ -407,10 +411,12 @@ class checkBtn(QPushButton):
             painter.drawLine(w-r, h-2, w-r, h+10)
 
 
+# ------------ The Panel in which our sliders of volume reside ------------
 class settingsPanel(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+    # The PaintEvent
     def paintEvent(self, e):
         painter = QPainter(self)
         pen = QPen("#561B06")
@@ -458,7 +464,6 @@ class settingsPanel(QLabel):
         painter.drawPath(framePath)
 
         # Drawing the Text
-        # Our font to write Text
         self.fontID1 = QFontDatabase.addApplicationFont(
             "./assets/fonts/Cinzel-Regular.otf")
         self.Cinzel = QFont(
@@ -466,10 +471,8 @@ class settingsPanel(QLabel):
 
         self.Cinzel.setLetterSpacing(QFont.SpacingType.AbsoluteSpacing, 4)
         painter.setFont(self.Cinzel)
-        # painter.drawText(self.rect().adjusted(0, -3, 0, -3),
-        #                  Qt.AlignmentFlag.AlignCenter, self.btnText)
 
-        # Drawing and writing the button press logic
+        # Drawing the innerShape
         innerShape = QPainterPath()
         innerShape.moveTo(0, h-r)
         innerShape.lineTo(r, h)
@@ -492,10 +495,14 @@ class settingsPanel(QLabel):
         painter.drawLine(w-r, h, w-r, h+10)
 
 
+# ------------ The Output Paper Class ------------
 class outputPaper(QLabel):
 
+    # Creating Signals
+    # To hide the editor when trash animation runs.
     getEditorInTrashToo = Signal()
-    getHimBack = Signal()
+    getHimBack = Signal()  # Signal to show the editor after animation is done
+    # After showing output, we need to trigger animation again.
     getBlankPageAgain = Signal()
 
     disableButton = Signal()
@@ -509,9 +516,11 @@ class outputPaper(QLabel):
         self.isNewPage = None
         self.isTrashPage = None
         self.paperMargin = 10
+        # used to hide moving lines after animation is done.
         self.readyForVanish = False
 
-        self._offset = 0
+        self._offset = 0  # used to change y coord of moving lines
+        # used to cut the page after the paper has come out of printer.
         self._cutOffSet = 0
         self.paperOutDuration = 2200
 
@@ -525,7 +534,7 @@ class outputPaper(QLabel):
         self.isTrashPage = value
 
     # Main Function
-    def run(self, isSignalSender=False):
+    def run(self):
         if self.isNewPage:
             self.doBlankPageAnimation()
             if self.output == None:
@@ -535,11 +544,11 @@ class outputPaper(QLabel):
         if self.isTrashPage:
             self.getToTrash()
 
+    # ------------ ANIMATION CODES ------------
 
-# ANIMATION CODES
+    # Function which triggers trash animation.
 
     def getToTrash(self):
-
         self.getEditorInTrashToo.emit()
 
         x, y, w, h = 20, 213, 220, 230
@@ -553,6 +562,7 @@ class outputPaper(QLabel):
         self.moveAnim.finished.connect(self.enableButton.emit)
         self.moveAnim.start()
 
+    # Function which triggers new page animation
     def doBlankPageAnimation(self):
         w, h = 220, 230
         self._cutOffSet = 0
@@ -572,8 +582,8 @@ class outputPaper(QLabel):
         self.runTogether.addAnimation(self.lineMovingAnim)
         self.runTogether.start()
 
+    # Function which triggers Clip animation
     def detachAnimPhase(self):
-        # Clip animation
         self.cutAnim = QPropertyAnimation(self, b"cutOffSet")
         self.cutAnim.setStartValue(0)
         self.cutAnim.setEndValue(30)
@@ -582,19 +592,16 @@ class outputPaper(QLabel):
         if self.output == None:
             self.cutAnim.finished.connect(self.getHimBack.emit)
         else:
+            # This code is necessary to trigger new page animation after output is shown.
             self.disableButton.emit()
             waitTimer = QTimer(self)
             waitTimer.setSingleShot(True)
-            waitTimer.timeout.connect(self.decorateForBlank)
+            waitTimer.timeout.connect(self.getBlankPageAgain.emit)
             self.cutAnim.finished.connect(lambda: waitTimer.start(500))
 
         self.cutAnim.start()
 
-    # To get blank page after output page.
-    def decorateForBlank(self):
-        self.getBlankPageAgain.emit()
-
-    # Property
+    # Defining Properties
 
     def getOffSet(self):
         return self._offset
@@ -604,6 +611,7 @@ class outputPaper(QLabel):
         self.update()
 
     offset = Property(float, getOffSet, setOffSet)
+
 
     def getCutOffSet(self):
         return self._cutOffSet
@@ -622,6 +630,7 @@ class outputPaper(QLabel):
         else:
             self.readyForVanish = False
 
+    # The PaintEvent
     def paintEvent(self, e):
 
         painter = QPainter(self)
@@ -655,7 +664,8 @@ class outputPaper(QLabel):
         # Drawing the lines.
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
 
-        # ellipse equations
+        # ellipse equations used to get x coord at certain y coord of moving lines
+        # The purpose is to precisely maintain the margin.
         def xoF1Left(y): return 4 - math.sqrt(16*(1 - (y**2/225)))
         def xoF2Left(y): return 4 + math.sqrt(16*(1 - ((y - 30)**2/225)))
 
@@ -735,6 +745,7 @@ class outputPaper(QLabel):
                              self.height() - self._cutOffSet)
 
 
+# ------------ Actual Text Editor ------------
 class NotebookTextEdit(QPlainTextEdit):
 
     def __init__(self, parent=None):
@@ -743,7 +754,6 @@ class NotebookTextEdit(QPlainTextEdit):
 
         # trigger repaint when scrolling
         self.verticalScrollBar().valueChanged.connect(self.viewport().update)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # Our font for the editor
         self.fontID1 = QFontDatabase.addApplicationFont(
@@ -754,17 +764,17 @@ class NotebookTextEdit(QPlainTextEdit):
 
         self.setFont(self.VictorMono)
 
+    # Animation that will be triggered by getEditorInTrashToo signal of outputPaper class
     def getInTrash(self):
         x, y, w, h = self.x(), self.y(), self.width(), self.height()
-        actualGeometry = self.geometry()
         self.trashAnim = QPropertyAnimation(self, b"geometry")
         self.trashAnim.setStartValue(QRect(x, y, w, h))
         self.trashAnim.setEndValue(QRect(x, y + h + 5, w, 0))
         self.trashAnim.setDuration(self.trashDuration)
         self.trashAnim.start()
 
+    # PaintEvent responsible for notebook lines.
     def paintEvent(self, event):
-
         painter = QPainter(self.viewport())
         painter.setPen("#888888")
 
@@ -792,10 +802,12 @@ class NotebookTextEdit(QPlainTextEdit):
         super().paintEvent(event)
 
 
+# ------------ The Wooden Table on which everything resides ------------
 class body(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+    # The PaintEvent
     def paintEvent(self, e):
         r, w, h = 5, self.width(), self.height()
 
@@ -815,7 +827,7 @@ class body(QLabel):
         for i in range(1, 13):
             painter.drawLine(0, i * 26, self.width(), i * 26)
 
-        # Code for nails
+        # Code for nails (circles in the right)
         stoneBrownPen = QPen()
         stoneBrownPen.setColor("#625B56")
 
@@ -828,6 +840,7 @@ class body(QLabel):
         painter.setBrush("#561B06")
         painter.setPen(Qt.PenStyle.NoPen)
 
+        # the undershape
         underShape = QPainterPath()
         underShape.moveTo(0, h-3*r)
         underShape.lineTo(0, h-r)
@@ -844,6 +857,7 @@ class body(QLabel):
         painter.drawPath(underShape)
 
 
+# ------------ Our main window class ------------
 class mainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -876,10 +890,12 @@ class mainWindow(QMainWindow):
             "./assets/sounds/freesound_community-printer-scan-68679.wav"))
         self.blankSound.setVolume(0.7)
 
+        # Making window trasparent and resizing it.
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.resize(600, 490)
 
+        # Our widgets
         self.background = body(self)
         self.background.setGeometry(0, 150, self.width(), self.height() - 150)
 
@@ -962,6 +978,11 @@ class mainWindow(QMainWindow):
         self.printerMusicSlider.valueChanged.connect(
             lambda: self.blankSound.setVolume(self.printerMusicSlider.value() / 100))
 
+        ''' 
+        Created Two output papers because one will go to trash while second one will appear
+        as output page or new page.
+        '''
+
         self.outputPaper1 = outputPaper(self)
         self.outputPaper1.setGeometry(20, 213, 220, 0)
 
@@ -976,7 +997,7 @@ class mainWindow(QMainWindow):
             background: transparent; color: black;}''')
         self.actualTextEditor.hide()
 
-        # To get editor in trash too
+        # Using our signals that we created in outputPaper class
         papers = [self.outputPaper1, self.outputPaper2]
 
         for paper in papers:
@@ -989,6 +1010,7 @@ class mainWindow(QMainWindow):
             paper.PlayPrintSound.connect(lambda: self.printSound.play())
             paper.PlayBlankSound.connect(lambda: self.blankSound.play())
 
+        # Our simple close button
         self.closeBtn = QPushButton("Close", self)
         self.closeBtn.setFont(self.actualTextEditor.VictorMono)
         self.closeBtn.setGeometry(520, 85, 70, 25)
@@ -1000,6 +1022,7 @@ class mainWindow(QMainWindow):
                                         border-radius: 5px}''')
         self.closeBtn.clicked.connect(self.close)
 
+        # The About Button
         self.aboutBtn = QPushButton("i", self)
         self.aboutBtn.setFont(self.actualTextEditor.VictorMono)
         self.aboutBtn.setGeometry(480, 85, 25, 25)
@@ -1010,12 +1033,14 @@ class mainWindow(QMainWindow):
                                         border-radius: 12px;}''')
         self.aboutBtn.clicked.connect(self.openAbout)
 
+    # To clear the text written in editor and setting it on focus
     def resetEditor(self):
         self.actualTextEditor.clear()
         self.actualTextEditor.setGeometry(36, 248, 189, 190)
         self.actualTextEditor.setFocus()
         self.checkBtn.setEnabled(True)
 
+    # Our main function which trigger all the animation stuff.
     def startMachine(self, f1, t1, f2, t2, isBlank):
         output = None
         if self.clickTime > 0:
@@ -1054,6 +1079,7 @@ class mainWindow(QMainWindow):
 
             self.clickTime = 1
 
+    # Function to open the about dialog
     def openAbout(self):
         aboutDialog = AboutDialog()
         aboutDialog.exec()
