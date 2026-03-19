@@ -1,13 +1,15 @@
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QApplication
 from PySide6.QtCore import Qt
 
+import webbrowser
+
 
 class AboutDialog(QDialog):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("About Spam Detector")
-        self.setFixedSize(400, 400)
+        self.setFixedSize(450, 450)
 
         layout = QVBoxLayout(self)
 
@@ -17,8 +19,8 @@ class AboutDialog(QDialog):
         info = QLabel(
             "Version: 1.0\n"
             "Developer: Jatin Verma\n"
-            "Built with: PySide6\n\n"
-            "First Release 🚀\n"
+            "Built with: PySide6, Scikit-Learn\n\n"
+            "First Release 🚀\n\n"
             "Assets Credits:\n"
             "- SOUNDS:\n"
             "  > Printing.wav -- deadsounds.com\n"
@@ -30,9 +32,13 @@ class AboutDialog(QDialog):
             "  > SpecialElite by Astigmatic (Google Fonts)\n"
             "  > BeautifulES by Ellen Luff\n"
         )
+        info.setOpenExternalLinks(True)  # 🔥 important
 
         copy_btn = QPushButton("Copy")
         ok_btn = QPushButton("OK")
+        go_to_repository = QPushButton("Go to Github repository")
+        go_to_repository.clicked.connect(lambda: webbrowser.open_new_tab(
+            "https://github.com/King-Of-The-Coding-World/Spam-Detector/tree/main"))
 
         copy_btn.clicked.connect(
             lambda: QApplication.clipboard().setText(info.text())
@@ -42,4 +48,5 @@ class AboutDialog(QDialog):
         layout.addWidget(title)
         layout.addWidget(info)
         layout.addWidget(copy_btn)
+        layout.addWidget(go_to_repository)
         layout.addWidget(ok_btn)
