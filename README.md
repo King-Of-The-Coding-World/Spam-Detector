@@ -36,7 +36,7 @@ SPAMDETECTOR/
 │
 ├── model.pkl             # Trained ML model
 ├── vectorizer.pkl        # Text vectorizer
-├── df.csv                # Dataset used for training
+├── datasetLink.txt                # Link to Dataset file used for training
 │
 ├── assets/
 │   ├── fonts/            # Custom fonts used in UI
