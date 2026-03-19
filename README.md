@@ -67,11 +67,15 @@ python main.py
 
 ---
 
-## 📸 Screenshots
+## 📽️ Demo Video
+
+[Video Link]
+
+---
+
+## 📸 Screenshot
 
 ![Blank Page UI](screenshots/blank%20page.png)
-![Spam Result](screenshots/spam.png)
-![Not Spam Result](screenshots/not%20spam.png)
 
 ---
 
