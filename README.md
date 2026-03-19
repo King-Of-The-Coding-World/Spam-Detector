@@ -85,6 +85,8 @@ If you use this project or any part of it, please give credit:
 
 **Jatin Verma**
 
+**NOTE:** Do not use this project for **COMMERCIAL PURPOSES** without permission.
+
 Assets:
 
 - Fonts: Open-source fonts
